@@ -9,6 +9,10 @@ pylint = "*"
 pandas = "*"
 scikit-learn = "*"
 scipy = "*"
+tensorflow-gpu = "*"
+keras = "*"
+numpy = "*"
+opencv-python = "*"
 
 [dev-packages]
 
