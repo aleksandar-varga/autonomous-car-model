@@ -32,7 +32,7 @@ def split_data(X, y):
 
 
 def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
-    X_train, y_train, X_valid, y_valid = split_data(X, y)
+    X_train, X_valid, y_train, y_valid = split_data(X, y)
 
     model = Sequential()
 
