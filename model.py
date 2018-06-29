@@ -11,7 +11,7 @@ from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 
 from settings import IMAGE_SIZE
-from setting import TRAINING_DIR
+from settings import TRAINING_DIR
 
 from utils import batch_generator
 from utils import load_data
@@ -57,7 +57,7 @@ def split_data(X, y):
     return train_test_split(X, y, test_size=0.1)
 
 
-def train(X, y, steps_per_epoche, epoches, batch_size, learning_rate):
+def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     X_train, y_train, X_valid, y_valid = split_data(X, y)
 
     checkpoint = ModelCheckpoint(
@@ -77,8 +77,8 @@ def train(X, y, steps_per_epoche, epoches, batch_size, learning_rate):
 
     model.fit_generator(
         generator=batch_generator(X_train, y_train, batch_size),
-        steps_per_epoche=steps_per_epoche,
-        epoches=epoches,
+        steps_per_epoch=steps_per_epoch,
+        epochs=epochs,
         validation_data=batch_generator(X_valid, y_valid, batch_size),
         validation_steps=len(X_valid) / batch_size,
         callbacks=[checkpoint],
