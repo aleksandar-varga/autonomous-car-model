@@ -17,32 +17,6 @@ from utils import batch_generator
 from utils import load_data
 
 
-class NvidiaModel(Sequential):
-
-    def __init__(self):
-        super(NvidiaModel, self).__init__()
-
-        # normalize images encoded using YUV color space
-        f_normalize = lambda x: x/127.5 - 1.0
-        self.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
-
-        # subsample == stride
-        self.add(Conv2D(24, 5, 5, activation='relu', subsample=(2, 2)))
-        self.add(Conv2D(36, 5, 5, activation='relu', subsample=(2, 2)))
-        self.add(Conv2D(48, 5, 5, activation='relu', subsample=(2, 2)))
-        self.add(Conv2D(64, 3, 3, activation='relu'))
-        self.add(Conv2D(64, 3, 3, activation='relu'))
-
-        self.add(Flatten())
-
-        self.add(Dense(100, activation='relu'))
-        self.add(Dense(50, activation='relu'))
-        self.add(Dense(10, activation='relu'))
-        self.add(Dense(1))
-
-        self.summary()
-
-
 def load_training_data():
     path = os.path.join(TRAINING_DIR, 'driving_log.csv')
     X, y = load_data(path)
@@ -60,19 +34,37 @@ def split_data(X, y):
 def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     X_train, y_train, X_valid, y_valid = split_data(X, y)
 
+    model = Sequential()
+
+    f_normalize = lambda x: x/127.5 - 1.0
+    model.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
+
+    model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='relu'))
+    model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='relu'))
+    model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='relu'))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
+
+    model.add(Flatten())
+
+    model.add(Dense(units=100, activation='relu'))
+    model.add(Dense(units=50, activation='relu'))
+    model.add(Dense(units=10, activation='relu'))
+    model.add(Dense(units=1))
+
+    model.summary()
+
+    model.compile(
+        loss='mean_squared_error',
+        optimizer=Adam(learning_rate),
+    )
+
     checkpoint = ModelCheckpoint(
         'model-{epoch:03d}.h5',
         monitor='val_loss',
         verbose=0,
         save_best_only=True,
         mode='auto',
-    )
-
-    model = NvidiaModel()
-
-    model.compile(
-        loss='mean_squared_error',
-        optimizer=Adam(learning_rate),
     )
 
     model.fit_generator(
