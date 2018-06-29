@@ -88,7 +88,6 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
 
 def main():
     X, y = load_training_data()
-    X, y = X[20], y[20]
     train(X, y, 20000, 10, 40, 1.0e-4)
 
 
