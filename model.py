@@ -1,3 +1,5 @@
+import os
+
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Conv2D
 from keras.layers import Dense
