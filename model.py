@@ -10,7 +10,7 @@ from keras.optimizers import Adam
 
 from sklearn.model_selection import train_test_split
 
-from settings import IMAGE_SIZE
+from settings import INPUT_SHAPE
 from settings import TRAINING_DIR
 
 from utils import batch_generator
@@ -24,7 +24,7 @@ class NvidiaModel(Sequential):
 
         # normalize images encoded using YUV color space
         f_normalize = lambda x: x/127.5 - 1.0
-        self.add(Lambda(f_normalize, output_shape=IMAGE_SIZE))
+        self.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
 
         # subsample == stride
         self.add(Conv2D(24, 5, 5, activation='relu', subsample=(2, 2)))
