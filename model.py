@@ -1,5 +1,6 @@
 import argparse
 import os
+import json
 
 import tensorflow as tf
 
@@ -12,6 +13,7 @@ from keras.layers import Dropout
 from keras.layers import LeakyReLU
 from keras.layers import BatchNormalization
 from keras.models import Sequential
+from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import Adam
 
 from sklearn.model_selection import train_test_split
@@ -19,12 +21,13 @@ from sklearn.model_selection import train_test_split
 from settings import INPUT_SHAPE
 from settings import TRAINING_DIR
 
-from utils import batch_generator
+from utils import load_image
 from utils import load_data
 
 
 def load_training_data():
     X, y = load_data(TRAINING_DIR, 'driving_log.csv')
+    X = [load_image(path) for path in X]
     return X, y
 
 
@@ -33,7 +36,23 @@ def split_data(X, y):
 
 
 def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
-    X_train, X_valid, y_train, y_valid = split_data(X, y)
+    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1)
+
+    generator_options = dict(
+        featurewise_center=True,
+        featurewise_std_normalization=True,
+        rescale=1./255,
+        horizontal_flip=True,
+        rotation_range=20,
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+    )
+
+    training_generator = ImageDataGenerator(**generator_options)
+    training_generator.fit(X_train)
+
+    validation_generator = ImageDataGenerator(**generator_options)
+    validation_generator.fit(X_valid)
 
     model = Sequential()
 
@@ -53,6 +72,8 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
     model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
 
     model.add(Dropout(0.33))
 
@@ -84,15 +105,18 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
         mode='auto',
     )
 
-    model.fit_generator(
-        generator=batch_generator(X_train, y_train, batch_size),
+    history = model.fit_generator(
+        generator=training_generator.flow(X_train, y_train, batch_size=batch_size),
         steps_per_epoch=steps_per_epoch,
         epochs=epochs,
-        validation_data=batch_generator(X_valid, y_valid, batch_size),
+        validation_data=validation_generator.flow(X_valid, y_valid, batch_size=batch_size),
         validation_steps=len(X_valid) / batch_size,
         callbacks=[checkpoint],
         verbose=1,
     )
+
+    with open('history.json', 'w') as f:
+        json.dump(history, f, indent=1)
 
 
 def main(gpu=False):

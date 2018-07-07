@@ -50,8 +50,7 @@ def batch_generator(X, y, batch_size):
 
 
 def main():
-    data_path = os.path.join(TRAINING_DIR, 'driving_log.csv')
-    X, y = load_data(data_path)
+    X, y = load_data(TRAINING_DIR, 'driving_log.csv')
 
     convert_path = lambda x: os.path.join(TRAINING_DIR, x.strip())
     X = [[convert_path(img) for img in row] for row in X]
