@@ -1,3 +1,4 @@
+import argparse
 import os
 
 import tensorflow as tf
@@ -85,4 +86,10 @@ def main(gpu=False):
         train(X, y, 20000, 10, 40, 1.0e-4)
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-g', '--gpu', default=False, action="store_true")
+
+    args = parser.parse_args()
+
+    main(args.gpu)
