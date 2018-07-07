@@ -10,6 +10,7 @@ from keras.layers import Flatten
 from keras.layers import Lambda
 from keras.layers import Dropout
 from keras.layers import LeakyReLU
+from keras.layers import BatchNormalization
 from keras.models import Sequential
 from keras.optimizers import Adam
 
@@ -41,12 +42,16 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
 
     model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
 
     model.add(Dropout(0.33))
@@ -55,10 +60,13 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
 
     model.add(Dense(units=100, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Dense(units=50, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Dense(units=10, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
     model.add(Dense(units=1))
 
     model.summary()
