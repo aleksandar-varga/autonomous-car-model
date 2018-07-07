@@ -91,7 +91,7 @@ def main(gpu=False):
     X, y = load_training_data()
 
     with tf.device('/gpu:0' if gpu else '/cpu:0'):
-        train(X, y, 20000, 10, 40, 1.0e-4)
+        train(X, y, 10000, 8, 40, 1.0e-4)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
