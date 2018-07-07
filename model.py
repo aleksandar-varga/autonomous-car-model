@@ -7,6 +7,7 @@ from keras.layers import Conv2D
 from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Lambda
+from keras.layers import Dropout
 from keras.models import Sequential
 from keras.optimizers import Adam
 
@@ -41,6 +42,8 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='relu'))
     model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
     model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
+
+    model.add(Dropout(0.33))
 
     model.add(Flatten())
 
