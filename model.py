@@ -3,6 +3,7 @@ import os
 import json
 
 import tensorflow as tf
+import numpy as np
 
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Conv2D
@@ -27,7 +28,7 @@ from utils import load_data
 
 def load_training_data():
     X, y = load_data(TRAINING_DIR, 'driving_log.csv')
-    X = [load_image(path) for path in X]
+    X = np.array([load_image(path) for path in X])
     return X, y
 
 
@@ -41,7 +42,6 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     generator_options = dict(
         featurewise_center=True,
         featurewise_std_normalization=True,
-        rescale=1./255,
         horizontal_flip=True,
         rotation_range=20,
         width_shift_range=0.2,
