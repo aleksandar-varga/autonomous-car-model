@@ -9,6 +9,7 @@ from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import Lambda
 from keras.layers import Dropout
+from keras.layers import LeakyReLU
 from keras.models import Sequential
 from keras.optimizers import Adam
 
@@ -38,19 +39,26 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     f_normalize = lambda x: x/127.5 - 1.0
     model.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
 
-    model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='relu'))
-    model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='relu'))
-    model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='relu'))
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
+    model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
 
     model.add(Dropout(0.33))
 
     model.add(Flatten())
 
-    model.add(Dense(units=100, activation='relu'))
-    model.add(Dense(units=50, activation='relu'))
-    model.add(Dense(units=10, activation='relu'))
+    model.add(Dense(units=100, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Dense(units=50, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(Dense(units=10, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
     model.add(Dense(units=1))
 
     model.summary()
