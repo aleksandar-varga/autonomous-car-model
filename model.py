@@ -1,5 +1,6 @@
 import argparse
 import os
+import json
 
 import tensorflow as tf
 
@@ -53,6 +54,8 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
     model.add(Conv2D(filters=64, kernel_size=3, activation='linear'))
+    model.add(LeakyReLU(alpha=0.01))
+    model.add(BatchNormalization())
 
     model.add(Dropout(0.33))
 
@@ -84,7 +87,7 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
         mode='auto',
     )
 
-    model.fit_generator(
+    history = model.fit_generator(
         generator=batch_generator(X_train, y_train, batch_size),
         steps_per_epoch=steps_per_epoch,
         epochs=epochs,
@@ -94,6 +97,8 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
         verbose=1,
     )
 
+    with open('history.json', 'w') as f:
+        json.dump(history, f, indent=1)
 
 def main(gpu=False):
     X, y = load_training_data()
