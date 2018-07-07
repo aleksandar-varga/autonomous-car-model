@@ -57,8 +57,10 @@ def send_control(steering_angle, throttle):
         skip_sid=True)
 
 def main():
+    global model
     model = load_model('models/model-008.h5')
 
+    global app
     app = socketio.Middleware(sio, app)
     eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
 
