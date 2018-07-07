@@ -1,5 +1,7 @@
 import os
 
+import tensorflow as tf
+
 from keras.callbacks import ModelCheckpoint
 from keras.layers import Conv2D
 from keras.layers import Dense
@@ -18,12 +20,7 @@ from utils import load_data
 
 
 def load_training_data():
-    path = os.path.join(TRAINING_DIR, 'driving_log.csv')
-    X, y = load_data(path)
-
-    convert_path = lambda x: os.path.join(TRAINING_DIR, x.strip())
-    X = [[convert_path(img) for img in row] for row in X]
-
+    X, y = load_data(TRAINING_DIR, 'driving_log.csv')
     return X, y
 
 
@@ -78,10 +75,11 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     )
 
 
-def main():
+def main(gpu=False):
     X, y = load_training_data()
-    train(X, y, 20000, 10, 40, 1.0e-4)
 
+    with tf.device('/gpu:0' if gpu else '/cpu:0'):
+        train(X, y, 20000, 10, 40, 1.0e-4)
 
 if __name__ == '__main__':
     main()

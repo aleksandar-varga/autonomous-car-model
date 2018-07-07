@@ -13,6 +13,11 @@ tensorflow-gpu = "*"
 keras = "*"
 numpy = "*"
 opencv-python = "*"
+tensorflow = "*"
+flask = "*"
+python-socketio = "*"
+eventlet = "*"
+pillow = "*"
 
 [dev-packages]
 

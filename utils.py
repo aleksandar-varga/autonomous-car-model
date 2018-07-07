@@ -1,8 +1,9 @@
+import os
+import random
+
 import cv2
 import numpy as np
-import os
 import pandas as pd
-import random
 
 from settings import IMAGE_CHANNELS
 from settings import IMAGE_HEIGHT
@@ -10,11 +11,15 @@ from settings import IMAGE_WIDTH
 from settings import TRAINING_DIR
 
 
-def load_data(path):
+def load_data(dir, file):
+    path = os.path.join(dir, file)
     data = pd.read_csv(path, header=None)
 
-    X = data[data.columns[:3]].values
+    X = data[data.columns[0]].values
     y = data[data.columns[3]].values
+   
+    convert_path = lambda x: os.path.join(dir, x.strip())
+    X = [convert_path(img) for img in X]
 
     return X, y
 
@@ -39,9 +44,7 @@ def batch_generator(X, y, batch_size):
     while True:
         chosen = random.sample(pool, batch_size)
         for i in range(batch_size):
-            # select either center, left or right image
-            img_path = np.random.choice(chosen[i][0])
-            batch[0][i] = load_image(img_path)
+            batch[0][i] = load_image(chosen[i][0])
             batch[1][i] = chosen[i][1]
         yield batch
 
