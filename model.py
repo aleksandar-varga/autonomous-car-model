@@ -39,7 +39,7 @@ def split_data(X, y):
 def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
     model = Sequential()
 
-    f_normalize = lambda x: x/127.5 - 1.0
+    f_normalize = lambda x: x / 127.5 - 1.0
     model.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
 
     model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='linear'))
@@ -58,17 +58,17 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
 
-    model.add(Dropout(0.33))
-
     model.add(Flatten())
 
-    model.add(Dense(units=100, activation='linear'))
+    model.add(Dense(units=120, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
-    model.add(Dense(units=50, activation='linear'))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=70, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
-    model.add(Dense(units=10, activation='linear'))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=12, activation='linear'))
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
     model.add(Dense(units=1))
@@ -92,13 +92,14 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         x=X,
         y=y,
         batch_size=batch_size,
-        epochs=epoch,
+        epochs=epochs,
         steps_per_epoch=steps_per_epoch,
         shuffle=True,
+        callbacks=[checkpoint],
     )
 
     with open('history.json', 'w') as f:
-        json.dump(history, f, indent=4)
+        json.dump(history.history, f, indent=4)
 
 
 def main(gpu=False, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):

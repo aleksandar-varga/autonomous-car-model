@@ -35,3 +35,21 @@ def load_image(path):
     # resize to 200x66
     img = cv2.resize(img, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
     return img
+
+def batch_generator(X, y, batch_size=32, shuffle=True):
+    batch = []
+    sample_size = len(y)
+    while True:
+        indices = np.random.uniform(0, sample_size, batch_size)
+        for i, index in enumerate(indices):
+            img = X[index]
+            angle = y[index]
+
+            flip_chance = np.random.uniform()
+            if flip_chance < 0.5:
+                img = cv2.flip(img)
+                angle = -angle
+
+            batch[i] = (img, angle)
+
+        yield batch
