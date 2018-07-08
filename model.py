@@ -116,16 +116,6 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         verbose=1,
     )
 
-    # history = model.fit(
-    #     x=X, 
-    #     y=y, 
-    #     batch_size=batch_size, 
-    #     epochs=epochs, 
-    #     callbacks=[checkpoint], 
-    #     validation_split=0.1,
-    #     verbose=1
-    # )
-
     with open('history.json', 'w') as f:
         json.dump(history.history, f, indent=4)
 
@@ -151,7 +141,7 @@ if __name__ == '__main__':
     main(
         gpu=args.gpu, 
         batch_size=int(args.batch_size), 
-        # int(args.epochs), 
-        # int(args.steps_per_epoch), 
-        # float(args.learning_rate)
+        epochs=int(args.epochs), 
+        steps_per_epoch=int(args.steps_per_epoch), 
+        learning_rate=float(args.learning_rate)
     )
