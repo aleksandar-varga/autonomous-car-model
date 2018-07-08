@@ -29,7 +29,6 @@ from utils import load_data
 
 def load_training_data():
     X, y = load_data(TRAINING_DIR, 'driving_log.csv')
-    # X = np.array([load_image(path) for path in X])
     return X, y
 
 
@@ -75,23 +74,6 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
     model.add(LeakyReLU(alpha=0.01))
     model.add(BatchNormalization())
     model.add(Dense(units=1))
-
-    # model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='elu'))
-    # model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='elu'))
-    # model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='elu'))
-    # model.add(Conv2D(filters=64, kernel_size=3, activation='elu'))
-    # model.add(Conv2D(filters=64, kernel_size=3, activation='elu'))
-
-    # model.add(Flatten())
-
-    # model.add(Dense(units=120, activation='elu'))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(units=70, activation='elu'))
-    # model.add(Dropout(0.5))
-    # model.add(Dense(units=12, activation='elu'))
-    # model.add(Dense(units=1))
-
-    # model.summary()
 
     model.compile(
         loss='mean_squared_error',

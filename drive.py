@@ -36,7 +36,7 @@ def receive(sid, data):
 
         steering_angle = float(model.predict(img, batch_size=1))
 
-        throttle = 1.0 - steering_angle ** 2 - (speed / 125) ** 2
+        throttle = 1.0 - steering_angle ** 2 - (speed / 15) ** 2
 
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
