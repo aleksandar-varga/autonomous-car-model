@@ -39,7 +39,7 @@ def split_data(X, y):
 
 def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
     X_train, X_valid, y_train, y_valid = split_data(X, y)
-    
+
     model = Sequential()
 
     f_normalize = lambda x: x / 127.5 - 1.0
@@ -123,4 +123,10 @@ if __name__ == '__main__':
     
     args = parser.parse_args()
 
-    main(args.gpu, args.batch_size, args.epochs, args.steps_per_epoch, args.learning_rate)
+    main(
+        args.gpu, 
+        float(args.batch_size), 
+        int(args.epochs), 
+        int(args.steps_per_epoch), 
+        float(args.learning_rate)
+    )
