@@ -22,6 +22,7 @@ from sklearn.model_selection import train_test_split
 from settings import INPUT_SHAPE
 from settings import TRAINING_DIR
 
+from utils import batch_generator
 from utils import load_image
 from utils import load_data
 
@@ -37,6 +38,8 @@ def split_data(X, y):
 
 
 def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
+    X_train, X_valid, y_train, y_valid = split_data(X, y)
+    
     model = Sequential()
 
     f_normalize = lambda x: x / 127.5 - 1.0
@@ -88,14 +91,14 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         mode='auto',
     )
 
-    history = model.fit(
-        x=X,
-        y=y,
-        batch_size=batch_size,
-        epochs=epochs,
+    history = model.fit_generator(
+        generator=batch_generator(X_train, y_train, batch_size),
         steps_per_epoch=steps_per_epoch,
-        shuffle=True,
+        epochs=epochs,
+        validation_data=batch_generator(X_valid, y_valid, batch_size, shuffle=False),
+        validation_steps=len(X_valid) / batch_size,
         callbacks=[checkpoint],
+        verbose=1,
     )
 
     with open('history.json', 'w') as f:

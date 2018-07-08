@@ -37,10 +37,18 @@ def load_image(path):
     return img
 
 def batch_generator(X, y, batch_size=32, shuffle=True):
-    batch = []
+    batch = [None] * batch_size
     sample_size = len(y)
+    step = 0
+
     while True:
-        indices = np.random.uniform(0, sample_size, batch_size)
+        if shuffle:
+            indices = np.random.uniform(0, sample_size, batch_size)
+        else:
+            start = step * batch_size
+            indices = list(range(start, start + batch_size))
+            step += 1
+
         for i, index in enumerate(indices):
             img = X[index]
             angle = y[index]
