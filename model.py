@@ -41,27 +41,20 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     f_normalize = lambda x: x/127.5 - 1.0
     model.add(Lambda(f_normalize, input_shape=INPUT_SHAPE))
 
-    model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Conv2D(filters=64, kernel_size=3, activation='relu'))
-    model.add(BatchNormalization())
+    model.add(Conv2D(filters=24, kernel_size=5, strides=2, activation='elu'))
+    model.add(Conv2D(filters=36, kernel_size=5, strides=2, activation='elu'))
+    model.add(Conv2D(filters=48, kernel_size=5, strides=2, activation='elu'))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='elu'))
+    model.add(Conv2D(filters=64, kernel_size=3, activation='elu'))
+
 
     model.add(Dropout(0.33))
 
     model.add(Flatten())
 
-    model.add(Dense(units=100, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(units=50, activation='relu'))
-    model.add(BatchNormalization())
-    model.add(Dense(units=10, activation='relu'))
-    model.add(BatchNormalization())
+    model.add(Dense(units=100, activation='elu'))
+    model.add(Dense(units=50, activation='elu'))
+    model.add(Dense(units=10, activation='elu'))
     model.add(Dense(units=1))
 
     model.summary()
