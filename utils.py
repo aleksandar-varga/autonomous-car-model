@@ -55,7 +55,7 @@ def batch_generator(X, y, batch_size=32, shuffle=True):
 
             flip_chance = np.random.uniform()
             if flip_chance < 0.5:
-                img = cv2.flip(img)
+                img = cv2.flip(img, 1)
                 angle = -angle
 
             batch[i] = (img, angle)
