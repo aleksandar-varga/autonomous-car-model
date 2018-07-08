@@ -101,7 +101,7 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
     #     verbose=1,
     # )
 
-    model.fit(
+    history = model.fit(
         X_train, 
         y_train, 
         batch_size=batch_size, 

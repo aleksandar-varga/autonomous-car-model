@@ -73,7 +73,7 @@ def main(path):
     print("sst: " + str(sst))
     print("ssr: " + str(ssr))
 
-    print('coef:' + coefficient_of_determination_squared)
+    print('coef:' + str(coefficient_of_determination_squared))
 
 
 if __name__ == "__main__":
