@@ -144,7 +144,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--batch-size', default=32, action="store")
     parser.add_argument('-e', '--epochs', default=10, action="store")
     parser.add_argument('-s', '--steps-per-epoch', default=10000, action="store")
-    parser.add_argument('-l', '--learning-rate', default=0.01, action="store")
+    parser.add_argument('-l', '--learning-rate', default=0.001, action="store")
     
     args = parser.parse_args()
 
