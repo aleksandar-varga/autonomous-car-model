@@ -40,7 +40,7 @@ def batch_generator(X, y, batch_size=32, shuffle=True):
     images = np.empty([batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS])
     angles = np.empty(batch_size)
 
-    sample_size = len(y)
+    sample_size = len(X)
     step = 0
 
     while True:
