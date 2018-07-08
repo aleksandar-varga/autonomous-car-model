@@ -43,7 +43,7 @@ def batch_generator(X, y, batch_size=32, shuffle=True):
 
     while True:
         if shuffle:
-            indices = np.random.uniform(0, sample_size, batch_size)
+            indices = [random.randint(0, sample_size) for _ in range(batch_size)]
         else:
             start = step * batch_size
             indices = list(range(start, start + batch_size))
