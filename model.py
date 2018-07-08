@@ -107,7 +107,7 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         batch_size=batch_size, 
         epochs=epochs, 
         callbacks=[checkpoint], 
-        validation_data=(X_valid,validaty_valid), 
+        validation_data=(X_valid,y_valid), 
         verbose=1
     )
 
