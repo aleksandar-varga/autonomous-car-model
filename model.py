@@ -85,7 +85,9 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
     model.add(Flatten())
 
     model.add(Dense(units=120, activation='elu'))
+    model.add(Dropout(0.5))
     model.add(Dense(units=70, activation='elu'))
+    model.add(Dropout(0.5))
     model.add(Dense(units=12, activation='elu'))
     model.add(Dense(units=1))
 
@@ -142,7 +144,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--batch-size', default=32, action="store")
     parser.add_argument('-e', '--epochs', default=10, action="store")
     parser.add_argument('-s', '--steps-per-epoch', default=10000, action="store")
-    parser.add_argument('-l', '--learning-rate', default=10, action="store")
+    parser.add_argument('-l', '--learning-rate', default=0.01, action="store")
     
     args = parser.parse_args()
 
