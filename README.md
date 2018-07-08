@@ -39,10 +39,10 @@ python model.py
 ```
 
 Optional arguments are
-* -b --batch-size (defaults to 32)
-* -e --epochs (defaults to 10)
-* -s --steps-per-epoch (defaults to 10000)
-* -l --learning-rate (defaults to 0.0001)
+* -b   --batch-size (defaults to 32)
+* -e   --epochs (defaults to 10)
+* -s   --steps-per-epoch (defaults to 10000)
+* -l   --learning-rate (defaults to 0.0001)
 
 ## Testing
 
