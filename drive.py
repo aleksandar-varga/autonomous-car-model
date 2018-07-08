@@ -1,15 +1,16 @@
+import argparse
 import base64
 
+import cv2
+import eventlet
+# import eventlet.wsgi
 import numpy as np
 import socketio
-import eventlet
-import eventlet.wsgi
 from PIL import Image
 from flask import Flask
-from io import BytesIO
-import cv2
-
 from keras.models import load_model
+from io import BytesIO
+
 
 sio = socketio.Server()
 app = Flask(__name__)
@@ -56,11 +57,19 @@ def send_control(steering_angle, throttle):
         },
         skip_sid=True)
 
-def main():
-    model = load_model('models/model-008.h5')
+def main(path):
+    global model
+    model = load_model(path)
 
+    global app
     app = socketio.Middleware(sio, app)
     eventlet.wsgi.server(eventlet.listen(('', 4567)), app)
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('model')
+
+    args = parser.parse_args()
+
+    main(path=args.model)

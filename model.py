@@ -36,24 +36,7 @@ def split_data(X, y):
     return train_test_split(X, y, test_size=0.1)
 
 
-def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
-    X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1)
-
-    generator_options = dict(
-        # featurewise_center=True,
-        # featurewise_std_normalization=True,
-        horizontal_flip=True,
-        rotation_range=10,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-    )
-
-    training_generator = ImageDataGenerator(**generator_options)
-    # training_generator.fit(X_train)
-
-    validation_generator = ImageDataGenerator(**generator_options)
-    # validation_generator.fit(X_valid)
-
+def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
     model = Sequential()
 
     f_normalize = lambda x: x/127.5 - 1.0
@@ -105,31 +88,35 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
         mode='auto',
     )
 
-    history = model.fit_generator(
-        generator=training_generator.flow(X_train, y_train, batch_size=batch_size),
+    history = model.fit(
+        x=X,
+        y=y,
+        batch_size=batch_size,
+        epochs=epoch,
         steps_per_epoch=steps_per_epoch,
-        epochs=epochs,
-        validation_data=validation_generator.flow(X_valid, y_valid, batch_size=batch_size),
-        validation_steps=len(X_valid) / batch_size,
-        callbacks=[checkpoint],
-        verbose=1,
+        shuffle=True,
     )
 
     with open('history.json', 'w') as f:
         json.dump(history, f, indent=4)
 
 
-def main(gpu=False):
+def main(gpu=False, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
     X, y = load_training_data()
 
     with tf.device('/gpu:0' if gpu else '/cpu:0'):
-        train(X, y, 10000, 8, 40, 1.0e-4)
+        train(X, y, batch_size, epochs, steps_per_epoch, learning_rate)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-g', '--gpu', default=False, action="store_true")
 
+    parser.add_argument('-b', '--batch-size', default=32, action="store")
+    parser.add_argument('-e', '--epochs', default=10, action="store")
+    parser.add_argument('-s', '--steps-per-epoch', default=10000, action="store")
+    parser.add_argument('-l', '--learning-rate', default=10, action="store")
+    
     args = parser.parse_args()
 
-    main(args.gpu)
+    main(args.gpu, args.batch_size, args.epochs, args.steps_per_epoch, args.learning_rate)

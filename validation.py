@@ -1,8 +1,11 @@
+import argparse
 
 import numpy
 from keras.models import load_model
-from settings import TEST_DIR
+
 import utils
+from settings import TEST_DIR
+
 
 def calculateSSE(exp_results, giv_results):
 
@@ -11,7 +14,6 @@ def calculateSSE(exp_results, giv_results):
 
     length = len(exp_results)
 
-    average = numpy.mean(giv_results)
     sum = 0
     for i in range(length):
         difference = exp_results[i] - giv_results[i]
@@ -56,9 +58,7 @@ def load_given_results():
     return utils.load_data(TEST_DIR, 'driving_log.csv')
 
 
-def main():
-    path = "models/model-008.h5"
-
+def main(path):
     X, y = load_given_results()
     expected_results = load_exptexted_results(path, X)
     avg = numpy.mean(y)
@@ -73,7 +73,14 @@ def main():
     print("sst: " + str(sst))
     print("ssr: " + str(ssr))
 
-    print(coefficient_of_determination_squared)
+    print('coef:' + coefficient_of_determination_squared)
+
 
 if __name__ == "__main__":
-   main()
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('model')
+
+    args = parser.parse_args()
+
+    main(path=args.model)
