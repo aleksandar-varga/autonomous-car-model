@@ -115,12 +115,12 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
     # )
 
     history = model.fit(
-        x=X_train, 
-        y=y_train, 
+        x=X, 
+        y=y, 
         batch_size=batch_size, 
         epochs=epochs, 
         callbacks=[checkpoint], 
-        validation_data=(X_valid,y_valid), 
+        validation_split=0.1,
         verbose=1
     )
 
