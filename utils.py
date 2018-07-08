@@ -37,8 +37,9 @@ def load_image(path):
     return img
 
 def batch_generator(X, y, batch_size=32, shuffle=True):
-    images = [None] * batch_size
-    angles = [None] * batch_size
+    images = np.empty([batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS])
+    angles = np.empty(batch_size)
+
     sample_size = len(y)
     step = 0
 
