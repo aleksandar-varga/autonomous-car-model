@@ -91,14 +91,24 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         mode='auto',
     )
 
-    history = model.fit_generator(
-        generator=batch_generator(X_train, y_train, batch_size),
-        steps_per_epoch=steps_per_epoch,
-        epochs=epochs,
-        validation_data=batch_generator(X_valid, y_valid, batch_size, shuffle=False),
-        validation_steps=len(X_valid) / batch_size,
-        callbacks=[checkpoint],
-        verbose=1,
+    # history = model.fit_generator(
+    #     generator=batch_generator(X_train, y_train, batch_size),
+    #     steps_per_epoch=steps_per_epoch,
+    #     epochs=epochs,
+    #     validation_data=batch_generator(X_valid, y_valid, batch_size, shuffle=False),
+    #     validation_steps=len(X_valid) / batch_size,
+    #     callbacks=[checkpoint],
+    #     verbose=1,
+    # )
+
+    model.fit(
+        X_train, 
+        y_train, 
+        batch_size=batch_size, 
+        epochs=epochs, 
+        callbacks=[checkpoint], 
+        validation_data=(X_valid,validaty_valid), 
+        verbose=1
     )
 
     with open('history.json', 'w') as f:
