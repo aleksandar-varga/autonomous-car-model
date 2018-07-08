@@ -29,7 +29,7 @@ from utils import load_data
 
 def load_training_data():
     X, y = load_data(TRAINING_DIR, 'driving_log.csv')
-    X = np.array([load_image(path) for path in X])
+    # X = np.array([load_image(path) for path in X])
     return X, y
 
 
@@ -37,7 +37,7 @@ def split_data(X, y):
     return train_test_split(X, y, test_size=0.1)
 
 
-def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
+def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.0001):
     X_train, X_valid, y_train, y_valid = split_data(X, y)
 
     model = Sequential()
@@ -106,31 +106,31 @@ def train(X, y, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0
         mode='auto',
     )
 
-    # history = model.fit_generator(
-    #     generator=batch_generator(X_train, y_train, batch_size),
-    #     steps_per_epoch=steps_per_epoch,
-    #     epochs=epochs,
-    #     validation_data=batch_generator(X_valid, y_valid, batch_size, shuffle=False),
-    #     validation_steps=len(X_valid) / batch_size,
-    #     callbacks=[checkpoint],
-    #     verbose=1,
-    # )
-
-    history = model.fit(
-        x=X, 
-        y=y, 
-        batch_size=batch_size, 
-        epochs=epochs, 
-        callbacks=[checkpoint], 
-        validation_split=0.1,
-        verbose=1
+    history = model.fit_generator(
+        generator=batch_generator(X_train, y_train, batch_size),
+        steps_per_epoch=steps_per_epoch,
+        epochs=epochs,
+        validation_data=batch_generator(X_valid, y_valid, batch_size),
+        validation_steps=len(X_valid) / batch_size,
+        callbacks=[checkpoint],
+        verbose=1,
     )
+
+    # history = model.fit(
+    #     x=X, 
+    #     y=y, 
+    #     batch_size=batch_size, 
+    #     epochs=epochs, 
+    #     callbacks=[checkpoint], 
+    #     validation_split=0.1,
+    #     verbose=1
+    # )
 
     with open('history.json', 'w') as f:
         json.dump(history.history, f, indent=4)
 
 
-def main(gpu=False, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.001):
+def main(gpu=False, batch_size=32, epochs=10, steps_per_epoch=10000, learning_rate=0.0001):
     X, y = load_training_data()
 
     with tf.device('/gpu:0' if gpu else '/cpu:0'):
@@ -144,14 +144,14 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--batch-size', default=32, action="store")
     parser.add_argument('-e', '--epochs', default=10, action="store")
     parser.add_argument('-s', '--steps-per-epoch', default=10000, action="store")
-    parser.add_argument('-l', '--learning-rate', default=0.001, action="store")
+    parser.add_argument('-l', '--learning-rate', default=0.0001, action="store")
     
     args = parser.parse_args()
 
     main(
-        args.gpu, 
-        int(args.batch_size), 
-        int(args.epochs), 
-        int(args.steps_per_epoch), 
-        float(args.learning_rate)
+        gpu=args.gpu, 
+        batch_size=int(args.batch_size), 
+        # int(args.epochs), 
+        # int(args.steps_per_epoch), 
+        # float(args.learning_rate)
     )
