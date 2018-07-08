@@ -42,9 +42,20 @@ def batch_generator(X, y, batch_size):
         np.empty(batch_size)
     )
     pool = list(zip(X, y))
+
+    chosen, img, angle = None, None, None
+
     while True:
         chosen = random.sample(pool, batch_size)
+        
         for i in range(batch_size):
-            batch[0][i] = load_image(chosen[i][0])
-            batch[1][i] = chosen[i][1]
+            img = load_image(chosen[i][0])
+            angle = chosen[i][1]
+
+            if np.random.rand() < 0.5:
+                img = cv2.flip(img, 1)
+                angle = -angle
+
+            batch[0][i] = img
+            batch[1][i] = angle
         yield batch
