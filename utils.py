@@ -37,7 +37,8 @@ def load_image(path):
     return img
 
 def batch_generator(X, y, batch_size=32, shuffle=True):
-    batch = [None] * batch_size
+    images = [None] * batch_size
+    angles = [None] * batch_size
     sample_size = len(y)
     step = 0
 
@@ -58,6 +59,7 @@ def batch_generator(X, y, batch_size=32, shuffle=True):
                 img = cv2.flip(img, 1)
                 angle = -angle
 
-            batch[i] = (img, angle)
+            images[i] = img
+            angles[i] = angle
 
-        yield batch
+        yield images, angles
