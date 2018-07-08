@@ -40,19 +40,19 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=0.1)
 
     generator_options = dict(
-        featurewise_center=True,
-        featurewise_std_normalization=True,
+        # featurewise_center=True,
+        # featurewise_std_normalization=True,
         horizontal_flip=True,
-        rotation_range=20,
+        rotation_range=10,
         width_shift_range=0.2,
         height_shift_range=0.2,
     )
 
     training_generator = ImageDataGenerator(**generator_options)
-    training_generator.fit(X_train)
+    # training_generator.fit(X_train)
 
     validation_generator = ImageDataGenerator(**generator_options)
-    validation_generator.fit(X_valid)
+    # validation_generator.fit(X_valid)
 
     model = Sequential()
 
@@ -116,7 +116,7 @@ def train(X, y, steps_per_epoch, epochs, batch_size, learning_rate):
     )
 
     with open('history.json', 'w') as f:
-        json.dump(history, f, indent=1)
+        json.dump(history, f, indent=4)
 
 
 def main(gpu=False):

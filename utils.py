@@ -15,8 +15,10 @@ def load_data(dir, file):
     path = os.path.join(dir, file)
     data = pd.read_csv(path, header=None)
 
-    X = data[data.columns[0]].values
-    y = data[data.columns[3]].values
+    X = data[data.columns[:3]].values.flatten().tolist()
+    y = []
+    for record in data[data.columns[3]].values:
+        y.extend([record, record + 0.25, record - 0.25])
    
     convert_path = lambda x: os.path.join(dir, x.strip())
     X = [convert_path(img) for img in X]
@@ -33,31 +35,3 @@ def load_image(path):
     # resize to 200x66
     img = cv2.resize(img, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
     return img
-
-
-def batch_generator(X, y, batch_size):
-    batch = (
-        np.empty((batch_size, IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)),
-        np.empty(batch_size)
-    )
-    pool = list(zip(X, y))
-    while True:
-        chosen = random.sample(pool, batch_size)
-        for i in range(batch_size):
-            batch[0][i] = load_image(chosen[i][0])
-            batch[1][i] = chosen[i][1]
-        yield batch
-
-
-def main():
-    X, y = load_data(TRAINING_DIR, 'driving_log.csv')
-
-    convert_path = lambda x: os.path.join(TRAINING_DIR, x.strip())
-    X = [[convert_path(img) for img in row] for row in X]
-
-    g = batch_generator(X, y, 3)
-    for _ in range(5):
-        print(next(g))
-
-if __name__ == '__main__':
-    main()
