@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     main(
         args.gpu, 
-        float(args.batch_size), 
+        int(args.batch_size), 
         int(args.epochs), 
         int(args.steps_per_epoch), 
         float(args.learning_rate)
